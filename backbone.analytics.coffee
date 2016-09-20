@@ -99,9 +99,9 @@ class window.Backbone.Analytics
   ##### Script source url
   script: =>
     if @debug == true
-      '.google-analytics.com/u/ga_debug.js'
+      '.google-analytics.com/u/analytics_debug.js'
     else
-      '.google-analytics.com/ga.js'
+      '.google-analytics.com/analytics.js'
   
   ##### Global _gaq object
   queue: =>

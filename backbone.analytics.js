@@ -1,5 +1,7 @@
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __slice = Array.prototype.slice;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __slice = [].slice;
+
   window.Backbone.Analytics = (function() {
     function Analytics(options) {
       if (options == null) {
@@ -33,7 +35,9 @@
         this.trackNavigate();
       }
     }
+
     Analytics.prototype.initialize = function() {};
+
     Analytics.prototype.loadScript = function() {
       var ga, s;
       ga = document.createElement('script');
@@ -43,6 +47,7 @@
       s = document.getElementsByTagName('script')[0];
       return s.parentNode.insertBefore(ga, s);
     };
+
     Analytics.prototype.protocol = function() {
       if (document.location.protocol === 'https:') {
         return 'https://ssl';
@@ -50,19 +55,23 @@
         return 'http://www';
       }
     };
+
     Analytics.prototype.script = function() {
       if (this.debug === true) {
-        return '.google-analytics.com/u/ga_debug.js';
+        return '.google-analytics.com/u/analytics_debug.js';
       } else {
-        return '.google-analytics.com/ga.js';
+        return '.google-analytics.com/analytics.js';
       }
     };
+
     Analytics.prototype.queue = function() {
       return window._gaq || (window._gaq = []);
     };
+
     Analytics.prototype.push = function(args) {
       return this.queue().push(args);
     };
+
     Analytics.prototype.setAccount = function() {
       if (this.code != null) {
         return this.push(['_setAccount', this.code]);
@@ -70,6 +79,7 @@
         throw new Error("Cannot Set Google Analytics Account: No Tracking Code Provided");
       }
     };
+
     Analytics.prototype.trackPageview = function(fragment) {
       var command;
       command = ['_trackPageview'];
@@ -78,21 +88,25 @@
       }
       return this.push(command);
     };
+
     Analytics.prototype.trackEvent = function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       return this.push(['_trackEvent'].concat(args));
     };
+
     Analytics.prototype.trackSocial = function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       return this.push(['_trackSocial'].concat(args));
     };
+
     Analytics.prototype.setCustomVar = function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       return this.push(['_setCustomVar'].concat(args));
     };
+
     Analytics.prototype.trackNavigate = function() {
       var navigate, trackPageview;
       trackPageview = this.trackPageview;
@@ -102,6 +116,9 @@
         return navigate.apply(this, arguments);
       };
     };
+
     return Analytics;
+
   })();
+
 }).call(this);
