@@ -81,13 +81,15 @@ class window.Backbone.Analytics
   # will stop this behavior if you already loaded it yourself.
   # 
   loadScript: =>
-    ga = document.createElement('script')
-    ga.type = 'text/javascript'
-    ga.async = true
-    ga.src = @protocol() + @script()
+    window.GoogleAnalyticsObject = 'ga'
+    
+    a = document.createElement('script')
+    a.type = 'text/javascript'
+    a.async = true
+    a.src = @protocol() + @script()
     
     s = document.getElementsByTagName('script')[0]
-    s.parentNode.insertBefore(ga, s)
+    s.parentNode.insertBefore(a, s)
   
   ##### Script source protocol
   protocol: =>
@@ -105,11 +107,14 @@ class window.Backbone.Analytics
   
   ##### Global _gaq object
   queue: =>
-    window._gaq ||= []
+    window.ga = window.ga || ->
+      (window.ga.q = window.ga.q || []).push(arguments)
+    window.ga.l = 1 * new Date();
+    window.ga
   
   ##### Push queue
   push: (args) =>
-    @queue().push(args)
+    @queue().apply(@, args)
   
   ##### Set Account
   #
@@ -121,27 +126,27 @@ class window.Backbone.Analytics
   #
   setAccount: =>
     if @code?
-      @push(['_setAccount', @code])
+      @push(['create', @code])
     else
       throw new Error("Cannot Set Google Analytics Account: No Tracking Code Provided")
   
   ##### Track Pageview
   trackPageview: (fragment) =>
-    command = ['_trackPageview']
+    command = ['send', 'pageview']
     command.push(fragment) if fragment?
     @push(command)
   
   ##### Track Event
   trackEvent: (args...) =>
-    @push(['_trackEvent'].concat(args))
+    @push(['send', 'event'].concat(args))
   
   ##### Track Social
   trackSocial: (args...) =>
-    @push(['_trackSocial'].concat(args))
+    @push(['send', 'social'].concat(args))
   
   ##### Set Custom Variable
   setCustomVar: (args...) =>
-    @push(['_setCustomVar'].concat(args))
+    @push(['set'].concat(args))
   
   ##### Track Backbone Navigation
   trackNavigate: =>
